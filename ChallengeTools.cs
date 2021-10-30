@@ -322,7 +322,18 @@ namespace ChallengeAPI
 		{
 			return new Vector2Int(vector.x, vector.y);
 		}
-		
+
+		/// <summary>
+		/// Returns <see langword="true"/> if <paramref name="self"/> overlaps with <paramref name="other"/>.
+		/// </summary>
+		/// <param name="self">This <see cref="RectInt"/>.</param>
+		/// <param name="other">The other <see cref="RectInt"/></param>
+		/// <returns><see langword="true"/> if <paramref name="self"/> overlaps with <paramref name="other"/>.</returns>
+		public static bool Overlaps(this RectInt self, RectInt other)
+		{
+			return other.xMax > self.xMin && other.xMin < self.xMax && other.yMax > self.yMin && other.yMin < self.yMax;
+		}
+
 		/// <summary>
 		/// Gets the first empty space in <paramref name="atlas"/> that has at least the size of <paramref name="pixelScale"/>.
 		/// </summary>
@@ -343,7 +354,7 @@ namespace ChallengeAPI
 				bool shouldContinue = false;
                 foreach (RectInt rint in rects)
                 {
-                    if (rint.Contains(point))
+                    if (rint.Overlaps(new RectInt(point, pixelScale.ToVector2Int())))
                     {
 						shouldContinue = true;
 						pointIndex++;
@@ -368,7 +379,7 @@ namespace ChallengeAPI
                         }
                         else
                         {
-                            if (currentRect.Contains(rint2.position))
+                            if (currentRect.Overlaps(rint2))
                             {
 								shouldContinue = true;
 								shouldBreak = true;
